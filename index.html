@@ -13,8 +13,10 @@
 		<script src="http://mathcs.slu.edu/~clair/graphics/src/OrbitControls.js"></script>
 		<script type="x-shader/x-vertex"   id="vertexShader">
 		varying vec3 vertex;
+		varying vec2 UV;
 		
 		void main() {
+			UV = uv;
 			vertex      = position.xyz;
 			gl_Position = projectionMatrix * modelViewMatrix * vec4(position , 1.0);
 			
@@ -27,17 +29,20 @@
 		uniform vec3 Sun_Position;
 
 		varying vec3 vertex;
-
+		varying vec2 UV;
+		
 		void main() {
 			vec3 V = normalize(vertex);
 			vec3 L = normalize(Sun_Position);
 			
 			float vl = dot(V, L);
-			
-			//vec4 Kc = texture2D(color, vec2((L.y + 1.0) / 2.0, V.y));
-			//vec4 Kg = texture2D(glow,  vec2((L.y + 1.0) / 2.0, vl));
-			//gl_FragColor = vec4(Kc.rgb + Kg.rgb * Kg.a / 2.0, Kc.a);
-			gl_FragColor = vec4(0.0, 0.1, V.y/L.y, 1.0);
+			vec4 Kc = texture2D(color, vec2((L.y + 1.0) / 2.0, V.y));
+			vec4 Kg = texture2D(glow,  vec2((L.y + 1.0) / 2.0, vl));
+			Kg.a = 0.0;
+			//vec4 Kc = texture2D(color, UV);
+			//vec4 Kg = texture2D(glow,  UV);
+			gl_FragColor = vec4(Kc.rgb + Kg.rgb * Kg.a / 2.0, Kc.a);
+			//gl_FragColor = vec4(0.0, 0.1, L.y, 1.0);
 		}
 
 </script>

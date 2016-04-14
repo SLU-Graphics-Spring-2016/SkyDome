@@ -1,4 +1,4 @@
-var txtLoader;
+var txtLoader, time_of_day=0;
 var renderer, scene, Sun;
 
 init();
@@ -9,16 +9,13 @@ function init(){
     //Scene
     scene = new THREE.Scene();
     
-    Sun = new THREE.PointLight( 0xFFFFFF, 1, 100 );
-    Sun.position.set( 0, 50, 0 );
+    Sun = new THREE.DirectionalLight( 0xFFFFFF, 1, 100 );
+    Sun.position.set( Math.cos(time_of_day), Math.sin(time_of_day), 0 );
     scene.add( Sun );
     
     
     // Uniforms for the custom shaders for the sky
-    var uniforms = THREE.UniformsUtils.merge( [
-      THREE.UniformsLib[ "ambient" ],
-      THREE.UniformsLib[ "lights" ]
-      ] );
+    var uniforms = [      ] ;
     
     // Simple Texture Loader
     txtLoader = new THREE.TextureLoader();
@@ -44,16 +41,16 @@ function init(){
 			}
     )  };
     
-    uniforms['Sun_Position'] = { type : 'v3', value : new THREE.Vector3(Sun.Position)
+    uniforms['Sun_Position'] = { type : 'v3', value :Sun.position
     };
     console.log(Sun.Position);
+    console.log(uniforms);
     
     //Defining the sky material;
     var mySky = new THREE.ShaderMaterial ({
 	uniforms : uniforms,
 	vertexShader : document.getElementById('vertexShader').innerHTML,
 	fragmentShader : document.getElementById('fragmentShader').innerHTML,
-	lights : true,
 	side : THREE.BackSide
 	});
     
@@ -66,8 +63,8 @@ function init(){
     
     //Scene floor
     
-    var planeGeometry = new THREE.PlaneGeometry(100, 100, 128, 128);
-    var planeMaterial = new  THREE.MeshPhongMaterial({color : 0xFF0000,shininess: 300, side : THREE.DoubleSide});
+    var planeGeometry = new THREE.PlaneGeometry(1000, 1000, 128, 128);
+    var planeMaterial = new  THREE.MeshPhongMaterial({color : 0x20AA00,shininess: 300, side : THREE.DoubleSide});
     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.rotateX(-Math.PI/2);
     scene.add(plane);
@@ -77,6 +74,7 @@ function init(){
     
     //Camera
     camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.y = 0.1;
     camera.position.z = 100;
     
     //Renderer
@@ -92,5 +90,7 @@ function init(){
 
 function render(){
     requestAnimationFrame(render);
+    Sun.position.set( Math.cos(time_of_day), Math.sin(time_of_day), 0 );
+    time_of_day += 0.01;
     renderer.render(scene, camera);
 }
