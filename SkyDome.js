@@ -46,7 +46,7 @@ function init(){
     
     uniforms['Sun_Position'] = { type : 'v3', value : new THREE.Vector3(Sun.Position)
     };
-    
+    console.log(Sun.Position);
     
     //Defining the sky material;
     var mySky = new THREE.ShaderMaterial ({
@@ -77,7 +77,7 @@ function init(){
     
     //Camera
     camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight, 0.1, 1000);
-    camera.position.z = 0.1;
+    camera.position.z = 100;
     
     //Renderer
     renderer = new THREE.WebGLRenderer();
