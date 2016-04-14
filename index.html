@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+	<meta charset = "utf-8">
+	<meta name="author" content="Jorge Gabriel Luz Mendes">
+		<title>SkyDome</title>
+	<style>
+	      body { margin: 0; }
+	</style>
+	</head>
+	<body>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r75/three.min.js"></script>
+		<script src="http://mathcs.slu.edu/~clair/graphics/src/OrbitControls.js"></script>
+		<script type="x-shader/x-vertex"   id="vertexShader">
+		varying vec3 vertex;
+		
+		void main() {
+			vertex      = position.xyz;
+			gl_Position = projectionMatrix * modelViewMatrix * vec4(position , 1.0);
+			
+		} 
+</script>
+		<script type="x-shader/x-fragment" id="fragmentShader">
+		uniform sampler2D glow;
+		uniform sampler2D color;
+
+		varying vec3 vertex;
+
+		void main() {
+			
+			
+						    
+			gl_FragColor = vec4(vertex.y/10.0, vertex.y/10.0, 1.0, 1.0);
+		}
+
+</script>
+		<script src="SkyDome.js"></script>
+	</body> 
+</html>
