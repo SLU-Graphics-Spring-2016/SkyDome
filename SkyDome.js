@@ -1,10 +1,18 @@
 var txtLoader;
-var renderer, scene;
+var renderer, scene, Sun;
 
 init();
 render();
 
 function init(){
+    
+    //Scene
+    scene = new THREE.Scene();
+    
+    Sun = new THREE.PointLight( 0xFFFFFF, 1, 100 );
+    Sun.position.set( 0, 50, 0 );
+    scene.add( Sun );
+    
     
     // Uniforms for the custom shaders for the sky
     var uniforms = THREE.UniformsUtils.merge( [
@@ -36,17 +44,19 @@ function init(){
 			}
     )  };
     
+    uniforms['Sun_Position'] = { type : 'v3', value : new THREE.Vector3(Sun.Position)
+    };
+    
+    
     //Defining the sky material;
     var mySky = new THREE.ShaderMaterial ({
 	uniforms : uniforms,
 	vertexShader : document.getElementById('vertexShader').innerHTML,
 	fragmentShader : document.getElementById('fragmentShader').innerHTML,
+	lights : true,
 	side : THREE.BackSide
 	});
     
-    
-    //Scene
-    scene = new THREE.Scene();
     
     
     //Adding the Dome to the scene:
@@ -63,9 +73,7 @@ function init(){
     scene.add(plane);
     
     
-    var Sun = new THREE.PointLight( 0xFFFFFF, 1, 100 );
-    Sun.position.set( 0, 50, 0 );
-    scene.add( Sun );
+    
     
     //Camera
     camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight, 0.1, 1000);
