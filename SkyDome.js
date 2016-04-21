@@ -69,7 +69,7 @@ function init(){
     star.scale.set(10, 10, 10);
     star.translateY(15);
     stars.add(star);
-    scene.add(stars);
+    //scene.add(stars); //Commented until a better star logic is defined
     
     //Sun
     
@@ -83,10 +83,10 @@ function init(){
     //Scene floor
     
     var planeGeometry = new THREE.PlaneGeometry(1000, 1000, 128, 128);
-    var planeMaterial = new  THREE.MeshPhongMaterial({color : 0x20AA00,shininess: 300, side : THREE.DoubleSide});
+    var planeMaterial = new  THREE.MeshPhongMaterial({color : 0x20AA00,shininess: 300});
     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.rotateX(-Math.PI/2);
-    //scene.add(plane);
+    scene.add(plane); //The ground plane looks kinda bad and you can see under the plane in certain angles
     
     
     
@@ -94,7 +94,7 @@ function init(){
     //Camera
     camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight, 0.1, 1000);
     camera.position.y = 10;
-    camera.position.z = 100;
+    camera.position.z = 90;
     
     //Renderer
     renderer = new THREE.WebGLRenderer();
@@ -105,6 +105,8 @@ function init(){
     //OrbitControls
     var controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.autoRotate = true;
+    //controls.maxPolarAngle = 5*Math.PI/6; 
+    controls.maxDistance = 100;
 }
 
 function render(){
