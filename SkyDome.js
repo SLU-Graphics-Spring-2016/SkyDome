@@ -13,7 +13,7 @@ function init(){
     Sun.position.set( Math.cos(time_of_day), Math.sin(time_of_day), 0 );
     scene.add( Sun );
     
-    
+    // SkyDome base
     // Uniforms for the custom shaders for the sky
     var uniforms = [      ] ;
     
@@ -61,20 +61,39 @@ function init(){
     var dome = new THREE.Mesh(domeGeometry, mySky);
     scene.add(dome);
     
+    //Stars
+    var starMap = new THREE.MeshBasicMaterial( {
+				
+				transparent: true,
+				opacity: 0.5,
+				color: 0xFFFFFF,
+				side: THREE.DoubleSide
+			    });
+    
+    starMaterial.map.wrapS = THREE.RepeatWrapping;
+    starMaterial.map.wrapT = THREE.RepeatWrapping;
+    starMaterial.map.repeat = new THREE.Vector2(8,2);
+    
+    var starGeometry = new THREE.SphereGeometry(99.9, 128, 128);
+    var stars = new THREE.Mesh(starGeometry, starMaterial);
+    scene.add(stars);
+    
+    
+    
     //Scene floor
     
     var planeGeometry = new THREE.PlaneGeometry(1000, 1000, 128, 128);
     var planeMaterial = new  THREE.MeshPhongMaterial({color : 0x20AA00,shininess: 300, side : THREE.DoubleSide});
     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.rotateX(-Math.PI/2);
-    scene.add(plane);
+    //scene.add(plane);
     
     
     
     
     //Camera
     camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight, 0.1, 1000);
-    camera.position.y = 0.1;
+    camera.position.y = 10;
     camera.position.z = 100;
     
     //Renderer
