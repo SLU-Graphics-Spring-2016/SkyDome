@@ -1,5 +1,5 @@
 var txtLoader, time_of_day=0;
-var renderer, scene, Sun;
+var renderer, scene, Sun, stars;
 
 init();
 render();
@@ -43,8 +43,6 @@ function init(){
     
     uniforms['Sun_Position'] = { type : 'v3', value :Sun.position
     };
-    console.log(Sun.Position);
-    console.log(uniforms);
     
     //Defining the sky material;
     var mySky = new THREE.ShaderMaterial ({
@@ -62,22 +60,24 @@ function init(){
     scene.add(dome);
     
     //Stars
-    var starMap = new THREE.MeshBasicMaterial( {
-				
-				transparent: true,
-				opacity: 0.5,
-				color: 0xFFFFFF,
-				side: THREE.DoubleSide
-			    });
+    //Parent Object3D of all star elements. This allows us to remove all stars at once at night.
+    stars = new THREE.Object3D();
     
-    starMaterial.map.wrapS = THREE.RepeatWrapping;
-    starMaterial.map.wrapT = THREE.RepeatWrapping;
-    starMaterial.map.repeat = new THREE.Vector2(8,2);
-    
-    var starGeometry = new THREE.SphereGeometry(99.9, 128, 128);
-    var stars = new THREE.Mesh(starGeometry, starMaterial);
+    var starMap = txtLoader.load("stars.jpeg");
+    var starMaterial = new THREE.SpriteMaterial({map: starMap, color: 0xFFFFFF}); 
+    var star = new THREE.Sprite(starMaterial);
+    star.scale.set(10, 10, 10);
+    star.translateY(15);
+    stars.add(star);
     scene.add(stars);
     
+    //Sun
+    
+    var sunMap = txtLoader.load("sun.png");
+    var sunMaterial = new THREE.SpriteMaterial({map: sunMap, color: 0xFFFFFF}); 
+    var sunSprite = new THREE.Sprite(sunMaterial);
+    sunSprite.scale.set(10, 10, 10);
+    Sun.add(sunSprite);
     
     
     //Scene floor
@@ -99,7 +99,7 @@ function init(){
     //Renderer
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0xC0A0A0);
+    renderer.setClearColor(0x000000);
     document.body.appendChild(renderer.domElement);
     
     //OrbitControls
@@ -109,7 +109,12 @@ function init(){
 
 function render(){
     requestAnimationFrame(render);
-    Sun.position.set( Math.cos(time_of_day), Math.sin(time_of_day), 0 );
+    Sun.position.set( 75*Math.cos(time_of_day), 75*Math.sin(time_of_day), 0 );
+    if (Math.sin(time_of_day) < 0) // At night
+	stars.visible = true;
+    else
+	stars.visible = false;
+    
     time_of_day += 0.01;
     renderer.render(scene, camera);
 }

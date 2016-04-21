@@ -38,11 +38,10 @@
 			float vl = dot(V, L);
 			vec4 Kc = texture2D(color, vec2((L.y + 1.0) / 2.0, V.y));
 			vec4 Kg = texture2D(glow,  vec2((L.y + 1.0) / 2.0, vl));
-			Kg.a = 0.0;
-			//vec4 Kc = texture2D(color, UV);
-			//vec4 Kg = texture2D(glow,  UV);
+			//Kg.a = 0.5;
+			
 			gl_FragColor = vec4(Kc.rgb + Kg.rgb * Kg.a / 2.0, Kc.a);
-			//gl_FragColor = vec4(0.0, 0.1, L.y, 1.0);
+			
 		}
 
 </script>
